@@ -2,6 +2,8 @@
 
 namespace Tests\Feature\Api\V1\Auth;
 
+use App\Models\User;
+use Faker\Factory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -18,20 +20,19 @@ class AuthTest extends TestCase
     public function test_register_user(): void
     {
 
-        $response = $this->post('/api/v1/auth/register', $this->user);
+        $response = $this->post('v1/auth/register', $this->user);
 
-
-        $response->assertStatus(201);
+        $response->assertRedirect('login');
 
     }
 
     public function test_user_registered(): void
     {
         // primeiro registro
-        $this->postJson('/api/v1/auth/register', $this->user);
+        $this->postJson('v1/auth/register', $this->user);
 
         // tenta registrar novamente
-        $response = $this->postJson('/api/v1/auth/register', $this->user);
+        $response = $this->postJson('v1/auth/register', $this->user);
 
         $response->assertStatus(422);
 
@@ -46,7 +47,7 @@ class AuthTest extends TestCase
             'name' => 'John Doe',
             'email' => 'JonhDoe@example.com',
         ];
-       $response = $this->postJson('/api/v1/auth/register', $user);
+       $response = $this->postJson('v1/auth/register', $user);
 
        $response->assertStatus(422);
 
@@ -62,11 +63,26 @@ class AuthTest extends TestCase
             'password' => 'password',
         ];
 
-        $response = $this->postJson('/api/v1/auth/register', $user);
+        $response = $this->postJson('v1/auth/register', $user);
 
         $response->assertStatus(422);
 
         $response->assertJsonValidationErrors(['email']);
     }
 
+    public function test_login_user(): void
+    {
+
+        $user = [
+            'name' =>  Factory::create()->name,
+            'email' => Factory::create()->email,
+            'password' => 'password',
+            'password_confirmation' => 'password'
+        ];
+        $this->postJson('v1/auth/register',$user);
+
+        $response = $this->postJson('v1/auth/login', $user);
+
+        $response->assertRedirect('/dashboard');
+    }
 }

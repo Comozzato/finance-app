@@ -7,6 +7,7 @@ use App\Http\Requests\Api\V1\Auth\RegisterRequest;
 use App\Models\User;
 use Database\Factories\UserFactory;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class RegisterController extends Controller
 {
@@ -15,10 +16,13 @@ class RegisterController extends Controller
     {
         $data = $request->validated();
 
-        $user = User::create($data);
+        User::create($data);
 
-        return response()->json( $user,201);
+        return redirect()->route('login');
     }
 
-
+    public function registerPage()
+    {
+        return Inertia::render('Auth/Register');
+    }
 }
