@@ -25,5 +25,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::get('pluggy', function () {return Inertia::render('Pluggy/PluggyConnect');})->name('Pluggy');
+
 require __DIR__.'/Api/V1/auth.php';
 //

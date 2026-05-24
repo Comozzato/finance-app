@@ -35,4 +35,9 @@ return [
         ],
     ],
 
+    'pluggy' => [
+        'client_id' => env('PLUGGY_API_CLIENT_ID'),
+        'client_secret' => env('PLUGGY_API_CLIENT_SECRET'),
+    ],
+
 ];
