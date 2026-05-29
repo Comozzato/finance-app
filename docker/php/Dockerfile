@@ -1,5 +1,4 @@
-FROM php:8.5-fpm-alpine3.23
-
+FROM dunglas/frankenphp:1-php8.5-alpine
 
 RUN apk add --no-cache \
     pcre-dev \
@@ -14,8 +13,7 @@ RUN apk add --no-cache \
     nodejs \
     npm
 
-
-# 2. Agora sim, o PHP tem tudo que precisa para compilar as extensões
+# Extensões PHP
 RUN docker-php-ext-install \
     pdo \
     pdo_mysql \
@@ -26,8 +24,8 @@ RUN docker-php-ext-install \
     pcntl
 
 RUN pecl install redis && docker-php-ext-enable redis
-# composer
+
+# Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-WORKDIR /var/www
-
+WORKDIR /app
