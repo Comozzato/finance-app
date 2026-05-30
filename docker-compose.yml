@@ -7,36 +7,43 @@ services:
         working_dir: /app
         volumes:
             - ./:/app
+            - caddy_data:/data
+            - ./docker/Caddyfile:/etc/Frankenphp/Caddy/Caddyfile
         ports:
             - "49000:80"
             - "5173:5173"
         environment:
             SERVER_NAME: ":80"
         tty: true
-    finance-redis:
+        depends_on:
+            - db
+            - redis
+
+    redis:
         image: redis:alpine
         container_name: finance-redis
         ports:
             - "6379:6379"
+
     db:
         image: postgres:16
         container_name: finance-db
         restart: always
         environment:
-          POSTGRES_DB: finance
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: root
+            POSTGRES_DB: finance
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: root
         ports:
-          - "5432:5432"
+            - "5432:5432"
         volumes:
-          - pgdata:/var/lib/postgresql/data
-      # Declaração obrigatória do volume nomeado usado no Db
+            - pgdata:/var/lib/postgresql/data
+
     mailhog:
-      image: 'mailhog/mailhog:latest'
-      container_name: finance-mailhog
-      ports:
-          - '49001:8025'
+        image: mailhog/mailhog:latest
+        container_name: finance-mailhog
+        ports:
+            - "49001:8025"
+
 volumes:
-        pgdata:
-
-
+    caddy_data:
+    pgdata:

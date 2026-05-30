@@ -1,0 +1,16 @@
+ auto_https off
+    pki {
+        ca local {
+            install_trust false
+        }
+    }
+
+:80 {
+    root * /app/public
+    php_server {
+        worker
+    }
+    encode gzip
+
+    file_server
+}

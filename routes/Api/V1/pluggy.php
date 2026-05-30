@@ -9,4 +9,6 @@ Route::prefix('v1/pluggy')
         Route::get('create-token', PluggyConnectController::class)->name('pluggy.create-token');
 
         Route::post('item', function(){return 'success';})->name('pluggy.item');
+
+        Route::post('webhook');
     });
